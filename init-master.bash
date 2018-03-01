@@ -1,15 +1,15 @@
 #!/bin/bash
 set -e
 
-kubeadm init --pod-network-cidr=10.244.0.0/16
+kubeadm init --ignore-preflight-errors Swap --pod-network-cidr=192.168.0.0/16
 
 # By now the master node should be ready!
 mkdir -p $HOME/.kube
 cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
 chown ${SUDO_UID} $HOME/.kube/config
 
-# Install flannel
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+# Install calico
+kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
 
 # Make master node a running worker node too!
 # FIXME: Use taint tolerations instead in the future
